@@ -62,6 +62,33 @@ if(!matchedtodo){
 });
 
 
+app.put("/todos/:id",function (req,res) {
+      var reqId = parseInt(req.params.id,10);
+      var parobj={};
+      var matchedtodo = _.findWhere(todos, {id: reqId});
+      var reqbody = _.pick(req.body,"completed", "description");
+
+      if(reqbody.hasOwnProperty("completed") && _.isBoolean(reqbody.completed)){
+          parobj.completed = reqbody.completed;
+      }else if(reqbody.hasOwnProperty("completed")){
+        return	res.status(404).send();
+      }
+
+      if(reqbody.hasOwnProperty("description") && _.isString(reqbody.description)){
+          parobj.description = reqbody.description;
+      }else if(reqbody.hasOwnProperty("description")){
+        return	res.status(404).send();
+      } 
+
+      
+     _.extend(matchedtodo, parobj);
+      
+
+      res.json(matchedtodo);
+      
+});
+
+
 app.get("/", function (req,res) {
 	res.status(404).send();
 });
