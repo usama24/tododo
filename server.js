@@ -1,5 +1,6 @@
 var express = require ("express");
 var bodyParser = require("body-parser");
+var _ = require("underscore");
 var app = express();
 app.use(bodyParser.json());
 var PORT = process.env.PORT || 3000;
@@ -44,6 +45,22 @@ todos.push(body);
 
     res.json(body);
 });
+
+
+app.delete("/todos/:id",function (req,res) {
+var reqId = parseInt(req.params.id,10);
+var matchedtodo = _.findWhere(todos,{id: reqId});
+
+if(!matchedtodo){
+	res.status(404).send("no such id exists ");
+}else{
+	todos = _.without(todos, matchedtodo);
+
+	res.json(matchedtodo);
+}
+
+});
+
 
 app.get("/", function (req,res) {
 	res.status(404).send();
